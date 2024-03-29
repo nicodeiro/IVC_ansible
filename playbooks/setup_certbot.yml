@@ -1,0 +1,35 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Installer snapd
+      ansible.builtin.package:
+        name: snapd
+        state: present
+
+    - name: Assurer la prise en charge de snapd classic
+      ansible.builtin.file:
+        src: /var/lib/snapd/snap
+        dest: /snap
+        state: link
+
+    - name: Supprimer certbot-auto et ses dépendances
+      ansible.builtin.apt:
+        name: certbot
+        state: absent
+      ignore_errors: yes
+
+    - name: Installer Certbot avec snap
+      ansible.builtin.command:
+        cmd: snap install --classic certbot
+
+    - name: Préparer la commande Certbot
+      ansible.builtin.file:
+        src: /snap/bin/certbot
+        dest: /usr/bin/certbot
+        state: link
+
+    - name: Obtenir un certificat Let's Encrypt pour Nginx (test)
+      ansible.builtin.command:
+        cmd: certbot --nginx -d yourdomain.com --non-interactive --agree-tos --email your-email@example.com --dry-run
+      ignore_errors: yes
+
