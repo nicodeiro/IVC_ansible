@@ -20,3 +20,4 @@
         dest: "~/.git-credentials"
         content: "https://{{ github_user }}:{{ github_token }}@github.com"
         mode: '0600'
+
