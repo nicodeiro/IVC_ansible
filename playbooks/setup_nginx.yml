@@ -1,0 +1,17 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Créer le répertoire de sauvegarde pour MySQL
+      ansible.builtin.file:
+        path: "/var/backups/mysql"
+        state: directory
+
+
+    - name: Configurer la tâche pour la sauvegarde de la base de données MySQL
+      ansible.builtin.cron:
+        name: "Sauvegarde quotidienne de MySQL"
+        special_time: "daily"
+        job: "docker exec mysql_container mysqldump -u root --password=password appdb > /var/backups/mysql/appdb_$(date +\\%Y\\%m\\%d).sql"
+        user: root
+      
+
