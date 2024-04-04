@@ -1,0 +1,14 @@
+# Utiliser l'image Nginx
+FROM nginx:alpine
+
+# Supprimer les fichiers par défaut
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copier le fichier HTML dans le répertoire Nginx
+COPY taches.html /usr/share/nginx/html/index.html
+
+# Exposer le port
+EXPOSE 80
+
+# Lancer Nginx en arrière-plan
+CMD ["nginx", "-g", "daemon off;"]
